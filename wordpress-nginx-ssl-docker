@@ -1,0 +1,120 @@
+#!/bin/bash
+
+# Install Docker
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+sudo usermod -aG docker $USER
+
+# Install Docker Compose
+sudo apt install docker-compose -y
+
+# Create a directory for your Docker project
+mkdir wordpress-docker
+cd wordpress-docker
+
+# Create a Docker Compose file
+touch docker-compose.yml
+
+# Add the following content to the docker-compose.yml file
+cat <<EOT >> docker-compose.yml
+version: '3'
+services:
+  db:
+    image: mysql:5.7
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+
+  wordpress:
+    depends_on:
+      - db
+    image: wordpress
+    volumes:
+      - ./wp-content:/var/www/html/wp-content
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
+    ports:
+      - 8080:80
+
+  nginx-proxy-manager:
+    image: jlesage/nginx-proxy-manager
+    ports:
+      - 81:81
+      - 444:444
+      - 80:80
+    environment:
+      - USER_ID=1000
+      - GROUP_ID=1000
+      - TZ=Europe/Paris
+    volumes:
+      - ./nginx-proxy-manager/data:/config
+      - ./nginx-proxy-manager/letsencrypt:/etc/letsencrypt
+
+volumes:
+  db_data:
+
+EOT
+
+# Run the Docker containers
+docker-compose up -d
+
+# Create a script for managing the Docker containers
+touch wordpress-cli.sh
+
+# Add the following content to the wordpress-cli.sh file
+cat <<EOT >> wordpress-cli.sh
+#!/bin/bash
+
+# Define functions to manage the Docker containers
+function up() {
+    docker-compose up -d
+}
+
+function down() {
+    docker-compose down
+}
+
+function delete() {
+    docker-compose down -v
+    docker image rm wordpress mysql:5.7 jlesage/nginx-proxy-manager
+}
+
+# Parse command line arguments
+case \$1 in
+    up)
+        up
+        ;;
+    down)
+        down
+        ;;
+    delete)
+        delete
+        ;;
+    *)
+        echo "Usage: ./wordpress-cli.sh [up|down|delete]"
+        exit 1
+        ;;
+esac
+
+EOT
+
+# Make the script executable
+chmod +x wordpress-cli.sh
+
+
+# Run the following command to make the script executable: chmod +x wordpress-setup.sh.
+# Run the script using ./wordpress-setup.sh.
+# Nginx Proxy Manager's GUI can be accessed by visiting http://localhost:81
+
+# ./wordpress-cli.sh up: Starts the Docker containers.
+# /wordpress-cli.sh down: Stops the Docker containers.
+# ./wordpress-cli.sh delete: Stops the Docker containers, removes volumes, and cleans up the images.
