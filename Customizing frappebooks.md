@@ -7,7 +7,7 @@ cd books
 yarn install
 yarn electron:serve or yarn electron:build
 ```
-## Print Header on every page in frappe books Invoice Template.
+## ✔ Print Header on every page in frappe books Invoice Template.
 ```css
 @media print {
   .print-on-pages {
@@ -17,7 +17,7 @@ yarn electron:serve or yarn electron:build
 }
 ```
 
-## Add Custom Fonts
+## ✔ Add Custom Fonts
 
 1. Add Font Name in `./tailwind.config.js`
 ```js
