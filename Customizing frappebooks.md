@@ -17,7 +17,7 @@ yarn electron:serve or yarn electron:build
 }
 ```
 
-## Add Custome Fonts
+## Add Custom Fonts
 
 1. Add Font Name in `./tailwind.config.js`
 ```js
