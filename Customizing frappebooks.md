@@ -1,6 +1,6 @@
 https://frappebooks.com/ - simple invoicing and accounts managment
 
-## Clone the repository to customize your (frappebooks)[https://frappebooks.com/]
+## Clone the repository to customize your [frappebooks](https://frappebooks.com/)
 ```
 git clone https://github.com/frappe/books.git
 cd books
