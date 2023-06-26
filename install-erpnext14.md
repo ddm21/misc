@@ -73,7 +73,7 @@ sudo service mysql restart
 ```
 sudo apt-get install redis-server
 ```
-#### STEP 9 Install Node.js 14.X package
+#### STEP 9 Install Node.js 16.X package
 ```
 sudo apt install curl
 curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash &&
