@@ -21,6 +21,7 @@ sudo apt install python3.10-venv
 ```
 sudo apt-get install software-properties-common
 sudo apt install mariadb-server
+sudo mysql_secure_installation
 ```
 after running this command it will as few question to setup mariadb which i need to be asked in terminal and get the answer
 - Enter current password for root (enter for none): # PRESS ENTER
