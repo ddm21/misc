@@ -84,7 +84,9 @@ sudo apt-get install npm
 sudo npm install -g yarn
 ```
 ### STEP 11 install wkhtmltopdf
-```sudo apt-get install xvfb libfontconfig wkhtmltopdf```
+```
+sudo apt-get install xvfb libfontconfig wkhtmltopdf
+```
 ### STEP 12 install frappe-bench
 ```
 sudo -H pip3 install frappe-bench
