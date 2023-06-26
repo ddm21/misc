@@ -138,7 +138,7 @@ sudo apt install certbot python3-certbot-nginx
 certbot -d {domain_name} --register-unsafely-without-email
 su - {new-user-name}
 ```
-### for auto renew the certificate
+### STEP 19 For auto renew the certificate
 ```
 sudo certbot renew --dry-run
 ```
