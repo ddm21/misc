@@ -105,6 +105,7 @@ bench start
 bench new-site {site-name}
 bench use {site-name}
 ```
+- Enable Developer mode ```bench set-config -g developer_mode 1``` ( run this command in /frappe-bench )
 #### STEP 15 install ERPNext latest version in bench & site
 ```
 bench get-app payments
