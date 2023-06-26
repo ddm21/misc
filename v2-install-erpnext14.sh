@@ -1,224 +1,146 @@
-```bash
 #!/bin/bash
 
-# Variables
-GIT_INSTALLATION="sudo apt-get install -y git"
-PYTHON_DEV_INSTALLATION="sudo apt-get install -y python3-dev"
-SETUPTOOLS_PIP_INSTALLATION="sudo apt-get install -y python3-setuptools python3-pip"
-VIRTUALENV_INSTALLATION="sudo apt-get install -y virtualenv && sudo apt-get install -y python3.10-venv"
-MARIADB_INSTALLATION="sudo apt-get install -y software-properties-common && sudo apt-get install -y mariadb-server"
-SECURE_MARIADB="sudo mysql_secure_installation"
-MYSQL_DEV_FILES_INSTALLATION="sudo apt-get install -y libmysqlclient-dev"
-REDIS_INSTALLATION="sudo apt-get install -y redis-server"
-NODEJS_INSTALLATION="sudo apt-get install -y curl && curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash && source ~/.profile && nvm install 16"
-YARN_INSTALLATION="sudo apt-get install -y npm && sudo npm install -g yarn"
-WKHTMLTOPDF_INSTALLATION="sudo apt-get install -y xvfb libfontconfig wkhtmltopdf"
-FRAPPE_BENCH_INSTALLATION="sudo -H pip3 install frappe-bench==5.10.1"
-FRAPPE_BRANCH="version-14"
-SITE_NAME="dcode.com"
-ERPNEXT_APP_INSTALLATION="bench get-app payments && bench get-app erpnext --branch version-14 && bench --site dcode.com install-app erpnext"
-PRODUCTION_SETUP="sudo bench setup production dcode-frappe"
-CREATE_USER="sudo adduser dcode-frappe && sudo usermod -aG sudo dcode-frappe"
-SSL_CERTBOT_INSTALLATION="sudo apt-get install -y certbot python3-certbot-nginx"
-SSL_DOMAIN_NAME="{domain_name}"
-SSL_CERTBOT_RENEWAL="sudo certbot renew --dry-run"
+# STEP 1 Install git
+sudo apt-get install git
 
-# Function to display success message with emoji
-function show_success_message {
-    echo -e "\e[32m✅ $1\e[0m"
-}
+# STEP 2 install python-dev
+sudo apt-get install python3-dev
 
-# Function to display error message with emoji
-function show_error_message {
-    echo -e "\e[31m❌ $1\e[0m"
-}
+# STEP 3 Install setuptools and pip (Python's Package Manager).
+sudo apt-get install python3-setuptools python3-pip
 
-# Function to display information message with emoji
-function show_info_message {
-    echo -e "\e[33m🔔 $1\e[0m"
-}
+# STEP 4 Install virtualenv
+sudo apt-get install virtualenv
+sudo apt install python3.10-venv
 
-# Function to display prompt message
-function show_prompt_message {
-    echo -e "\e[34m❓ $1\e[0m"
-}
+# STEP 5 Install MariaDB
+sudo apt-get install software-properties-common
+sudo apt install mariadb-server
 
-# Check if running as root user
-if [ "$EUID" -ne 0 ]; then
-    show_error_message "This script must be run as root user."
-    exit 1
+# Prompt for MariaDB setup
+echo "Please provide the following information to set up MariaDB:"
+sudo mysql_secure_installation
+
+# STEP 6 MySQL database development files
+sudo apt-get install libmysqlclient-dev
+
+# STEP 7 Edit the mariadb configuration ( unicode character encoding )
+sudo nano /etc/mysql/mariadb.conf.d/50-server.cnf
+
+# Prompt the user to add the required configuration
+echo "Please add the following configuration to the 50-server.cnf file:"
+echo "[server]
+user = mysql
+pid-file = /run/mysqld/mysqld.pid
+socket = /run/mysqld/mysqld.sock
+basedir = /usr
+datadir = /var/lib/mysql
+tmpdir = /tmp
+lc-messages-dir = /usr/share/mysql
+bind-address = 127.0.0.1
+query_cache_size = 16M
+log_error = /var/log/mysql/error.log
+
+[mysqld]
+innodb-file-format=barracuda
+innodb-file-per-table=1
+innodb-large-prefix=1
+character-set-client-handshake = FALSE
+character-set-server = utf8mb4
+collation-server = utf8mb4_unicode_ci
+
+[mysql]
+default-character-set = utf8mb4"
+
+# Prompt to continue after editing the file
+read -p "Press Enter to continue once you have edited the file: " continue_input
+
+# Restart MariaDB
+sudo service mysql restart
+
+# STEP 8 install Redis
+sudo apt-get install redis-server
+
+# STEP 9 install Node.js 14.X package
+sudo apt install curl
+curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash &&
+apt-get install nodejs -y
+
+# STEP 10 install Yarn
+sudo apt-get install npm
+sudo npm install -g yarn
+
+# STEP 11 install wkhtmltopdf
+sudo apt-get install xvfb libfontconfig wkhtmltopdf
+
+# STEP 12 install frappe-bench
+sudo -H pip3 install frappe-bench
+bench --version
+
+# STEP 13 initialize the frappe bench & install frappe latest version
+bench init frappe-bench --frappe-branch version-14
+cd frappe-bench/
+bench start
+
+# Prompt for site name
+read -p "Enter the site name: " site_name
+
+# STEP 14 create a site in frappe bench
+bench new-site "$site_name"
+bench use "$site_name"
+
+# STEP 15 install ERPNext latest version in bench & site
+bench get-app payments
+bench get-app erpnext --branch version-14
+bench --site "$site_name" install-app erpnext
+bench start
+
+# Step 16 setup production
+sudo bench setup production {username}-frappe
+bench restart
+
+# Prompt to continue after restarting bench
+read -p "Press Enter to continue once bench has been restarted: " continue_input
+
+# If bench restart is not worked run the following command again with all Questions Yes
+sudo bench setup production dcode-frappe
+
+# Prompt to continue after setting up production
+read -p "Press Enter to continue once production setup is complete: " continue_input
+
+# Fix permissions for js and css file loading on login window
+sudo chmod o+x /home/
+
+# Prompt to ask if a new user should be created
+read -p "Do you want to create a new user? (y/n): " create_user_input
+
+if [[ $create_user_input == "y" ]]; then
+    read -p "Enter the new username: " new_username
+
+    # Create a new user
+    sudo adduser "$new_username"
+    sudo usermod -aG sudo "$new_username"
+
+    # Prompt to ask if SSL setup is required
+    read -p "Do you want to set up SSL? (y/n): " ssl_setup_input
+
+    if [[ $ssl_setup_input == "y" ]]; then
+        # Prompt for the domain name for SSL certificate
+        read -p "Enter the domain name for SSL certificate: " domain_name
+
+        # Install certbot and obtain the SSL certificate
+        sudo apt install certbot python3-certbot-nginx
+        sudo certbot -d "$domain_name" --register-unsafely-without-email
+
+        # Switch to the new user
+        su - "$new_username"
+
+        # Prompt to continue after switching user
+        read -p "Press Enter to continue: " continue_input
+
+        # Auto renew the certificate
+        sudo certbot renew --dry-run
+    fi
 fi
 
-# Function to create a new user
-function create_new_user {
-    show_info_message "Creating a new user..."
-    $CREATE_USER
-    show_success_message "New user created successfully!"
-}
-
-# Function to install git
-function install_git {
-    show_info_message "Installing git..."
-    $GIT_INSTALLATION
-    show_success_message "Git installed successfully!"
-}
-
-# Function to install python-dev
-function install_python_dev {
-    show_info_message "Installing python-dev..."
-    $PYTHON_DEV_INSTALLATION
-    show_success_message "Python-dev installed successfully!"
-}
-
-# Function to install setuptools and pip
-function install_setuptools_pip {
-    show_info_message "Installing setuptools and pip..."
-    $SETUPTOOLS_PIP_INSTALLATION
-    show_success_message "Setuptools and pip installed successfully!"
-}
-
-# Function to install virtualenv
-function install_virtualenv {
-    show_info_message "Installing virtualenv..."
-    $VIRTUALENV_INSTALLATION
-    show_success_message "Virtualenv installed successfully!"
-}
-
-# Function to install MariaDB
-function install_mariadb {
-    show_info_message "Installing MariaDB..."
-    $MARIADB_INSTALLATION
-    show_success_message "MariaDB installed successfully!"
-}
-
-# Function to secure MariaDB installation
-function secure_mariadb {
-    show_prompt_message "Do you want to secure the MariaDB installation? (Y/n)"
-    read -r secure_mariadb
-
-    if [[ $secure_mariadb =~ ^[Yy]$ ]]; then
-        $SECURE_MARIADB
-    fi
-}
-
-# Function to install MySQL database development files
-function install_mysql_dev_files {
-    show_info_message "Installing MySQL database development files..."
-    $MYSQL_DEV_FILES_INSTALLATION
-    show_success_message "MySQL database development files installed successfully!"
-}
-
-# Function to edit the mariadb configuration
-function edit_mariadb_configuration {
-    show_info_message "Editing mariadb configuration..."
-    sudo nano /etc/mysql/mariadb.conf.d/50-server.cnf
-    # Add the required configuration to 50-server.cnf file
-
-    show_prompt_message "Press Enter after making the necessary changes in the mariadb configuration file..."
-    read -r enter_key
-
-    sudo service mysql restart
-    show_success_message "Mariadb configuration updated successfully!"
-}
-
-# Function to install Redis
-function install_redis {
-    show_info_message "Installing Redis..."
-    $REDIS_INSTALLATION
-    show_success_message "Redis installed successfully!"
-}
-
-# Function to install Node.js 14.X
-function install_nodejs {
-    show_info_message "Installing Node.js 14.X..."
-    $NODEJS_INSTALLATION
-    show_success_message "Node.js 14.X installed successfully!"
-}
-
-# Function to install Yarn
-function install_yarn {
-    show_info_message "Installing Yarn..."
-    $YARN_INSTALLATION
-    show_success_message "Yarn installed successfully!"
-}
-
-# Function to install wkhtmltopdf
-function install_wkhtmltopdf {
-    show_info_message "Installing wkhtmltopdf..."
-    $WKHTMLTOPDF_INSTALLATION
-    show_success_message "wkhtmltopdf installed successfully!"
-}
-
-# Function to install frappe-bench
-function install_frappe_bench {
-    show_info_message "Installing frappe-bench..."
-    $FRAPPE_BENCH_INSTALLATION
-    show_success_message "frappe-bench installed successfully!"
-}
-
-# Function to initialize frappe-bench and install frappe latest version
-function initialize_frappe_bench {
-    show_info_message "Initializing frappe-bench..."
-    bench init frappe-bench --frappe-branch "$FRAPPE_BRANCH"
-    cd frappe-bench/
-    show_success_message "frappe-bench initialized successfully!"
-}
-
-# Function to create a site in frappe bench
-function create_site {
-    show_info_message "Creating a new site in frappe-bench..."
-    bench new-site "$SITE_NAME"
-    bench use "$SITE_NAME"
-    show_success_message "New site created successfully!"
-}
-
-# Function to install ERPNext latest version in bench and site
-function install_erpnxt {
-    show_info_message "Installing ERPNext..."
-    $ERPNEXT_APP_INSTALLATION
-    show_success_message "ERPNext installed successfully!"
-}
-
-# Function to setup production environment
-function setup_production {
-    show_info_message "Setting up production environment..."
-    $PRODUCTION_SETUP
-    show_success_message "Production environment setup completed successfully!"
-}
-
-# Function to install SSL certificate
-function install_ssl_certificate {
-    show_info_message "Installing SSL certificate..."
-    sudo apt-get install -y certbot python3-certbot-nginx
-    certbot -d "$SSL_DOMAIN_NAME" --register-unsafely-without-email
-    show_success_message "SSL certificate installed successfully!"
-}
-
-# Function to setup auto-renewal for the SSL certificate
-function setup_ssl_auto_renewal {
-    show_info_message "Setting up auto-renewal for the SSL certificate..."
-    sudo certbot renew --dry-run
-    show_success_message "SSL certificate auto-renewal setup completed successfully!"
-}
-
-# Main script
-install_git
-install_python_dev
-install_setuptools_pip
-install_virtualenv
-install_mariadb
-secure_mariadb
-install_mysql_dev_files
-edit_mariadb_configuration
-install_redis
-install_nodejs
-install_yarn
-install_wkhtmltopdf
-install_frappe_bench
-initialize_frappe_bench
-create_site
-install_erpnxt
-create_new_user
-setup_production
-install_ssl_certificate
-setup_ssl_auto_renewal
+echo "Frappe/ERPNext installation completed successfully!"
