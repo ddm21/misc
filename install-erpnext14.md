@@ -31,9 +31,13 @@ after running this command it will as few question to setup mariadb which i need
 - Remove test database and access to it? [Y/n] Y
 - Reload privilege tables now? [Y/n] Y
 ### STEP 6 MySQL database development files
-```sudo apt-get install libmysqlclient-dev```
+```
+sudo apt-get install libmysqlclient-dev
+```
 ### STEP 7 Edit the mariadb configuration ( unicode character encoding )
-```sudo nano /etc/mysql/mariadb.conf.d/50-server.cnf```
+```
+sudo nano /etc/mysql/mariadb.conf.d/50-server.cnf
+```
 add this to the 50-server.cnf file
 ```
 [server]
