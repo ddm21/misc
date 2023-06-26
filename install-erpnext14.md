@@ -118,10 +118,14 @@ bench start
 sudo bench setup production {username}-frappe
 bench restart
 ```
-### If bench restart is not worked run the following command again with all Questions Yes
-```sudo bench setup production dcode-frappe```
-### If js and css file is not loading on login window run the following command
-```sudo chmod o+x /home/```
+- If bench restart is not worked run the following command again with all Questions Yes
+```
+sudo bench setup production dcode-frappe
+```
+- If js and css file is not loading on login window run the following command
+```
+sudo chmod o+x /home/
+```
 ### STEP 17 Create a new user
 ```
 sudo adduser {new-user-name}
