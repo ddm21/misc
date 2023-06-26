@@ -6,7 +6,8 @@ sudo apt-get install git
 ```
 ### STEP 2 install python-dev
 ```
-sudo apt-get install python3-dev```
+sudo apt-get install python3-dev
+```
 ### STEP 3 Install setuptools and pip (Python's Package Manager).
 ```
 sudo apt-get install python3-setuptools python3-pip```
