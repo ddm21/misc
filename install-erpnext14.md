@@ -1,5 +1,3 @@
-`Install Frappe/ERPNext version 14 in Ubuntu 22.04 LTS`
-
 #### STEP 1 Install git
 ```
 sudo apt-get install git
