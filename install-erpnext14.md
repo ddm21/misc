@@ -130,6 +130,7 @@ sudo chmod o+x /home/
 ```
 sudo adduser {new-user-name}
 sudo usermod -aG sudo {new-user-name}
+su {new-user-name}
 ```
 #### STEP 18 SSL certificate fot https
 - ask user for domainname for ssl certificate in {domain_name}
