@@ -75,7 +75,7 @@ sudo apt-get install redis-server
 ```
 sudo apt install curl
 curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash &&
-apt-get install nodejs -y
+sudo apt-get install nodejs -y
 ```
 #### STEP 10 Install Yarn
 ```
