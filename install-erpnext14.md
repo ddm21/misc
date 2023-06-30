@@ -147,6 +147,5 @@ sudo certbot renew --dry-run
 #### 20 Enable Firewall
 ```
 sudo iptables -A INPUT -p tcp -m multiport --dports 22,25,143,80,443,3306,3022,8000 -j ACCEPT
-or
 sudo ufw allow 22,25,143,80,443,3306,3022,8000/tcp
 ```
