@@ -23,7 +23,7 @@ yarn electron:serve or yarn electron:build
       sans: ['Inter', 'sans-serif', 'Roboto Mono', 'Lexend Peta'],
     },
 ```
-2. Add Font Face in `./src/styles/index.css`
+2. Add Font Face in `./src/styles/index.css` this will change font for entier application
 ```css
 @font-face {
   font-family: 'Roboto Mono';
