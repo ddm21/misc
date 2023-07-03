@@ -39,3 +39,4 @@ yarn electron:serve or yarn electron:build
   "label": "Roboto Mono"
 },
 ```
+4. Download and add fonts in `./src/asstes`
