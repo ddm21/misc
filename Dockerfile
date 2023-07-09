@@ -38,7 +38,7 @@ collation-server = utf8mb4_unicode_ci\n\
 default-character-set = utf8mb4" > /etc/mysql/mariadb.conf.d/50-server.cnf
 
 # Restart MySQL service
-RUN service mysql restart
+RUN systemctl restart mariadb
 
 # Install Node.js 16.x
 RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
