@@ -2,12 +2,11 @@
 
 The `tree` command is a Windows command-line tool that displays the directory structure of a specified path or drive in a tree format.
 
-**Usage**
+### Usage
 
-```plaintext
 tree [drive:][path] [/F] [/A] [/Q] [/R] [/T] [/X] [/K]
 
-# Options
+### Options
 [drive:][path]: Specifies the drive and directory to display the tree structure of. If no path is specified, the current directory is used.
 
 `/F:` Displays the names of the files in each folder.
@@ -18,7 +17,7 @@ tree [drive:][path] [/F] [/A] [/Q] [/R] [/T] [/X] [/K]
 `/X:` Prints the short names of files and directories.
 `/K:` Displays the sizes of folders in kilobytes.
 
-**Example**
+### Example
 To display the directory tree of the C:\Windows folder with file names and sizes, you would use the following command
 
 ```
