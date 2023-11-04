@@ -1,6 +1,10 @@
 import requests
 import time
 import threading
+import urllib3
+
+# Disable SSL warnings
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # Define the URL of your website
 website_url = "https://www.yourwebsite.com"
