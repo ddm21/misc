@@ -1,0 +1,6 @@
+Go to the Admin Panel
+Select Settings
+Select Connections
+Go to the OpenAI API section
+Set the API URL to http://host.docker.internal:9099
+Set the API key to 0p3n-w3bu!
