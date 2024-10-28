@@ -1,0 +1,7 @@
+sudo nano /etc/caddy/Caddyfile
+
+xyz.korex.ovh {
+  reverse_proxy :3000
+}
+
+sudo service caddy reload
