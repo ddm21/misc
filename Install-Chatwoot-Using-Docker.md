@@ -10,7 +10,6 @@ Before proceeding, ensure you have the latest version of Docker and Docker Compo
 docker --version
 docker compose version
 ```
-```
 
 ## Setup Steps
 
