@@ -1,6 +1,3 @@
-Here's a sample `README.md` file in Markdown format for setting up Chatwoot locally using Docker:
-
-```markdown
 # Chatwoot Setup Guide
 
 This guide will help you set up Chatwoot locally using Docker on your Windows machine.
@@ -12,6 +9,7 @@ Before proceeding, ensure you have the latest version of Docker and Docker Compo
 ```bash
 docker --version
 docker compose version
+```
 ```
 
 ## Setup Steps
@@ -77,4 +75,3 @@ Follow these steps to deploy Chatwoot:
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
-```
