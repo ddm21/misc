@@ -78,5 +78,3 @@ Follow these steps to deploy Chatwoot:
 
 This project is licensed under the [MIT License](LICENSE).
 ```
-
-Feel free to edit any sections according to your preferences or specific instructions!
